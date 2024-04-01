@@ -1,5 +1,5 @@
 [versions]
-agp = "8.2.2"
+agp = "8.3.1"
 brv = "1.5.8"
 compose = "1.0.0-beta01"
 constraintlayoutCompose = "1.0.1"
@@ -13,12 +13,12 @@ androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.7.0"
 activity-compose = "1.8.2"
-compose-bom = "2024.01.00"
+compose-bom = "2024.02.01"
 mmkv = "1.3.3"
 room-runtime = "2.6.1"
 lifecycleRuntimeCompose = "2.7.0"
-uiToolingPreviewAndroid = "1.6.0"
-md3 = "1.2.0-rc01"
+uiToolingPreviewAndroid = "1.6.2"
+md3 = "1.2.0"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
