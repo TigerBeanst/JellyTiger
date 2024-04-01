@@ -58,33 +58,38 @@ suspend fun getPublicSystemInfo(baseUrl: String, then: (PublicSystemInfo) -> Uni
     }
 }
 
-suspend fun loginByUserName(baseUrl: String, username: String, pw: String) {
+suspend fun loginByUserName(baseUrl: String, username: String, pw: String, then: () -> Unit) {
     jellyTiger.jfApi = jellyTiger.jellyfin.createApi(baseUrl = baseUrl)
     val api = jellyTiger.jfApi!!
-    val authenticationResult by api.userApi.authenticateUserByName(
-        AuthenticateUserByName(username = username, pw = pw)
-    )
-    api.accessToken = authenticationResult.accessToken
-    api.userId = authenticationResult.user!!.id
-    jellyTiger.globalServer = Server(
-        api.systemApi.getSystemInfo().content.id!!,
-        api.systemApi.getSystemInfo().content.serverName,
-        api.baseUrl, null, null,
-        api.systemApi.getSystemInfo().content.version,
-    )
-    jellyTiger.globalUser = User(
-        authenticationResult.user!!.id.toString(),
-        api.systemApi.getSystemInfo().content.id!!,
-        authenticationResult.accessToken,
-        authenticationResult.user!!.name,
-        authenticationResult.user!!.primaryImageTag,
-        authenticationResult.user!!.policy!!.isAdministrator,
-        authenticationResult.user!!.policy!!.isDisabled,
-    )
-    withContext(Dispatchers.IO) {
-        jellyTiger.dbServer.insert(jellyTiger.globalServer!!)
-        jellyTiger.dbUser.insert(jellyTiger.globalUser!!)
+    try {
+        val authenticationResult by api.userApi.authenticateUserByName(
+            AuthenticateUserByName(username = username, pw = pw)
+        )
+        api.accessToken = authenticationResult.accessToken
+        api.userId = authenticationResult.user!!.id
+        jellyTiger.globalServer = Server(
+            api.systemApi.getSystemInfo().content.id!!,
+            api.systemApi.getSystemInfo().content.serverName,
+            api.baseUrl, null, null,
+            api.systemApi.getSystemInfo().content.version,
+        )
+        jellyTiger.globalUser = User(
+            authenticationResult.user!!.id.toString(),
+            api.systemApi.getSystemInfo().content.id!!,
+            authenticationResult.accessToken,
+            authenticationResult.user!!.name,
+            authenticationResult.user!!.primaryImageTag,
+            authenticationResult.user!!.policy!!.isAdministrator,
+            authenticationResult.user!!.policy!!.isDisabled,
+        )
+        withContext(Dispatchers.IO) {
+            jellyTiger.dbServer.insert(jellyTiger.globalServer!!)
+            jellyTiger.dbUser.insert(jellyTiger.globalUser!!)
+        }
+        mmkv.encode("nowServer", jellyTiger.globalServer!!.serverId)
+        mmkv.encode("nowUser", jellyTiger.globalUser!!.userId)
+        then()
+    } catch (e: Exception) {
+        toast(e.message.toString())
     }
-    mmkv.encode("nowServer", jellyTiger.globalServer!!.serverId)
-    mmkv.encode("nowUser", jellyTiger.globalUser!!.userId)
 }

@@ -158,9 +158,9 @@ fun ServerAddressView(
     Button(
         onClick = { landingViewModel.onConnectClicked(landingUiState.serverAddress) },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !landingUiState.loading
+        enabled = !landingUiState.connectLoading
     ) {
-        if (landingUiState.loading) {
+        if (landingUiState.connectLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -278,16 +278,18 @@ fun UserInfoView(
         onValueChange = { landingViewModel.onPasswordChanged(it) },
         placeholder = { Text(stringResource(id = R.string.activity_landing_login_password)) },
         label = { Text(stringResource(id = R.string.activity_landing_login_password)) },
-        modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp),
         visualTransformation = PasswordVisualTransformation()
     )
     // Button: Sign In
     Button(
-        onClick = { landingViewModel.onConnectClicked(landingUiState.serverAddress) },
+        onClick = { landingViewModel.onSignInClicked(landingUiState.serverAddress, landingUiState.userName, landingUiState.password) },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !landingUiState.loading
+        enabled = !landingUiState.signInLoading
     ) {
-        if (landingUiState.loading) {
+        if (landingUiState.signInLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -309,9 +311,9 @@ fun UserInfoView(
     OutlinedButton(
         onClick = { landingViewModel.onConnectClicked(landingUiState.serverAddress) },
         modifier = modifier,
-        enabled = !landingUiState.loading
+        enabled = !landingUiState.signInLoading
     ) {
-        if (landingUiState.loading) {
+        if (landingUiState.connectLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
