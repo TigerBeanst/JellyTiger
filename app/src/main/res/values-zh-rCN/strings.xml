@@ -3,17 +3,17 @@
     <string name="error_data">数据异常</string>
 
     <!-- Landing Activity -->
-    <string name="activity_landing_server_address">服务器地址</string>
-    <string name="activity_landing_server_address_placeholder">服务器地址[:端口]</string>
-    <string name="activity_landing_server_connect">连接服务器</string>
-    <string name="activity_landing_login_operating_system">操作系统</string>
-    <string name="activity_landing_login_product_name">产品名称</string>
-    <string name="activity_landing_login_local_address">本地地址</string>
-    <string name="activity_landing_login_username">用户名</string>
-    <string name="activity_landing_login_password">密码</string>
-    <string name="activity_landing_login_sign_in">登  录</string>
-    <string name="activity_landing_login_quick_connect">快速连接</string>
-    <string name="activity_landing_tips">建议的 Jellyfin 版本为 v%s，当前支持的最低 Jellyfin 版本为 v%s。</string>
+    <string name="activity_login_server_address">服务器地址</string>
+    <string name="activity_login_server_address_placeholder">服务器地址[:端口]</string>
+    <string name="activity_login_server_connect">连接服务器</string>
+    <string name="activity_login_login_operating_system">操作系统</string>
+    <string name="activity_login_login_product_name">产品名称</string>
+    <string name="activity_login_login_local_address">本地地址</string>
+    <string name="activity_login_input_username">用户名</string>
+    <string name="activity_login_input_password">密码</string>
+    <string name="activity_login_sign_in">登  录</string>
+    <string name="activity_login_quick_connect">快速连接</string>
+    <string name="activity_login_tips">建议的 Jellyfin 版本为 v%s，当前支持的最低 Jellyfin 版本为 v%s。</string>
 
     <!-- Error -->
     <string name="error_unknown">未知错误</string>

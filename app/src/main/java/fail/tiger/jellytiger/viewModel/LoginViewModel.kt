@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jellyfin.sdk.model.api.PublicSystemInfo
 
-class LandingViewModel : ViewModel() {
+class LoginViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LandingUiState())
-    val uiState: StateFlow<LandingUiState> = _uiState
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState
 
 
     fun onServerAddressChanged(nowServerAddress: String) {
@@ -46,14 +46,14 @@ class LandingViewModel : ViewModel() {
         _uiState.update { it.copy(signInLoading = true) }
         viewModelScope.launch {
             loginByUserName(serverAddress, userName, passWord) {
-                startActivityEnhanced(MainActivity::class.java)
+                startActivityEnhanced(MainActivity::class.java, Pair("JustLetMeIn", true))
             }
             _uiState.update { it.copy(signInLoading = false) }
         }
     }
 }
 
-data class LandingUiState(
+data class LoginUiState(
     var serverAddress: String = "",
     var userName: String = "",
     var password: String = "",

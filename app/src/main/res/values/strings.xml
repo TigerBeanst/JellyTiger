@@ -1,19 +1,19 @@
 <resources>
-    <string name="app_name">JellyTiger</string>
+    <string name="app_name" translatable="false">JellyTiger</string>
     <string name="error_data">Data Error</string>
 
-    <!-- Landing Activity -->
-    <string name="activity_landing_server_address">Server Address</string>
-    <string name="activity_landing_server_address_placeholder">Server Address[:Port]</string>
-    <string name="activity_landing_server_connect">Connect Server</string>
-    <string name="activity_landing_login_operating_system">Operating System</string>
-    <string name="activity_landing_login_product_name">Product Name</string>
-    <string name="activity_landing_login_local_address">Local Address</string>
-    <string name="activity_landing_login_username">Username</string>
-    <string name="activity_landing_login_password">Password</string>
-    <string name="activity_landing_login_sign_in">Sign In</string>>
-    <string name="activity_landing_login_quick_connect">Quick Connect</string>
-    <string name="activity_landing_tips">Recommended Jellyfin version is v%s, the minimum supported Jellyfin version is v%s.</string>
+    <!-- Login Activity -->
+    <string name="activity_login_server_address">Server Address</string>
+    <string name="activity_login_server_address_placeholder">Server Address[:Port]</string>
+    <string name="activity_login_server_connect">Connect Server</string>
+    <string name="activity_login_login_operating_system">Operating System</string>
+    <string name="activity_login_login_product_name">Product Name</string>
+    <string name="activity_login_login_local_address">Local Address</string>
+    <string name="activity_login_input_username">Username</string>
+    <string name="activity_login_input_password">Password</string>
+    <string name="activity_login_sign_in">Sign In</string>>
+    <string name="activity_login_quick_connect">Quick Connect</string>
+    <string name="activity_login_tips">Recommended Jellyfin version is v%s, the minimum supported Jellyfin version is v%s.</string>
 
     <!-- Error -->
     <string name="error_unknown">Unknown Error</string>

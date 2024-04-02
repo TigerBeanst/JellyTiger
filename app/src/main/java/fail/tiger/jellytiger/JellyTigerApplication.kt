@@ -17,7 +17,7 @@ class JellyTigerApplication : Application() {
         val jtDatabase = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "jellytiger-db"
-        ).build()
+        ).allowMainThreadQueries().build()
         jellyTiger = JellyTiger(
             jellyfin = createJellyfin {
                 context = appContext

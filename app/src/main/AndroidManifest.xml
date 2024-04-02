@@ -18,17 +18,15 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.JellyTiger">
-        </activity>
-        <activity
-            android:name=".LandingActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.JellyTiger">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.JellyTiger">
         </activity>
     </application>
 

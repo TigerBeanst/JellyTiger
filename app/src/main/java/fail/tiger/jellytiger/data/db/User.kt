@@ -14,16 +14,20 @@ data class User(
     @PrimaryKey @ColumnInfo(name = "user_id") val userId: String,
     @ColumnInfo(name = "server_id") val serverId: String,
     @ColumnInfo(name = "access_token") val accessToken: String?,
-    @ColumnInfo(name = "user_name") val userName: String?,
+    @ColumnInfo(name = "user_name") val userName: String?, //Just Name, not username
     @ColumnInfo(name = "primary_image_tag") val primaryImageTag: String?,
     @ColumnInfo(name = "is_administrator") val isAdministrator: Boolean?,
-    @ColumnInfo(name = "is_disable") val isDisable: Boolean?
+    @ColumnInfo(name = "is_disable") val isDisable: Boolean?,
+    @ColumnInfo(name = "is_current") val isCurrent: Boolean?
 )
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
+
+    @Query("SELECT * FROM user WHERE is_current = 1")
+    fun getCurrentUser(): User?
 
     @Query("SELECT * FROM user WHERE user_id = :userId")
     fun getByUserId(userId: String): List<User>
@@ -32,7 +36,7 @@ interface UserDao {
     fun getByServerId(serverId: String): List<User>
 
     @Query("SELECT * FROM user WHERE access_token = :accessToken")
-    fun getByAccessToken(accessToken: String): List<User>
+    fun getByAccessToken(accessToken: String): User
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)

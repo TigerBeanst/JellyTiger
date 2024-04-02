@@ -7,7 +7,7 @@ import fail.tiger.jellytiger.JellyTigerApplication.Companion.appContext
 
 
 fun logd(message: String) =
-    Log.d("JellyTiger", message)
+    Log.d("JellyTiger", "[JellyTiger] $message")
 
 fun toast(message: Any, isStringResId: Boolean = false) =
     if (isStringResId) {

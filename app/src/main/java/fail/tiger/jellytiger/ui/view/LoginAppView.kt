@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
@@ -40,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,14 +50,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import fail.tiger.jellytiger.R
-import fail.tiger.jellytiger.viewModel.LandingUiState
-import fail.tiger.jellytiger.viewModel.LandingViewModel
+import fail.tiger.jellytiger.viewModel.LoginUiState
+import fail.tiger.jellytiger.viewModel.LoginViewModel
 import org.jellyfin.sdk.Jellyfin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LandingAppView(
-    landingViewModel: LandingViewModel,
+fun LoginAppView(
+    loginViewModel: LoginViewModel,
 ) {
     Scaffold(
         topBar = {
@@ -72,18 +75,18 @@ fun LandingAppView(
             )
         },
     ) { _ ->
-        LandingAppContent(
-            landingViewModel = landingViewModel
+        LoginAppContent(
+            loginViewModel = loginViewModel
         )
     }
 }
 
 @Composable
-fun LandingAppContent(
-    landingViewModel: LandingViewModel,
+fun LoginAppContent(
+    loginViewModel: LoginViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val landingUiState by landingViewModel.uiState.collectAsState()
+    val loginUiState by loginViewModel.uiState.collectAsState()
     ConstraintLayout(
         modifier = modifier
             .padding(16.dp)
@@ -99,14 +102,14 @@ fun LandingAppContent(
             },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (!landingUiState.serverCheckState) {
-                ServerAddressView(landingViewModel, landingUiState, modifier.align(Alignment.End))
+            if (!loginUiState.serverCheckState) {
+                ServerAddressView(loginViewModel, loginUiState, modifier.align(Alignment.End))
             } else {
-                UserInfoView(landingViewModel, landingUiState, modifier.align(Alignment.End))
+                UserInfoView(loginViewModel, loginUiState, modifier.align(Alignment.End))
             }
 
         }
-        if (!landingUiState.serverCheckState) {
+        if (!loginUiState.serverCheckState) {
             Text(
                 modifier = modifier
                     .alpha(0.5F)
@@ -117,7 +120,7 @@ fun LandingAppContent(
                         end.linkTo(parent.end)
                     },
                 text = stringResource(
-                    R.string.activity_landing_tips,
+                    R.string.activity_login_tips,
                     Jellyfin.apiVersion.toString(),
                     Jellyfin.minimumVersion.toString(),
                 ),
@@ -129,8 +132,8 @@ fun LandingAppContent(
 
 @Composable
 fun ServerAddressView(
-    landingViewModel: LandingViewModel,
-    landingUiState: LandingUiState,
+    loginViewModel: LoginViewModel,
+    loginUiState: LoginUiState,
     modifier: Modifier
 ) {
     Image(
@@ -148,19 +151,23 @@ fun ServerAddressView(
                 modifier = Modifier.size(24.dp)
             )
         },
-        value = landingUiState.serverAddress,
-        onValueChange = { landingViewModel.onServerAddressChanged(it) },
-        placeholder = { Text(stringResource(id = R.string.activity_landing_server_address_placeholder)) },
-        label = { Text(stringResource(id = R.string.activity_landing_server_address)) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {loginViewModel.onConnectClicked(loginUiState.serverAddress)}
+        ),
+        value = loginUiState.serverAddress,
+        onValueChange = { loginViewModel.onServerAddressChanged(it) },
+        placeholder = { Text(stringResource(id = R.string.activity_login_server_address_placeholder)) },
+        label = { Text(stringResource(id = R.string.activity_login_server_address)) },
         modifier = Modifier.fillMaxWidth()
     )
     // Button: Connect Server
     Button(
-        onClick = { landingViewModel.onConnectClicked(landingUiState.serverAddress) },
+        onClick = { loginViewModel.onConnectClicked(loginUiState.serverAddress) },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !landingUiState.connectLoading
+        enabled = !loginUiState.connectLoading
     ) {
-        if (landingUiState.connectLoading) {
+        if (loginUiState.connectLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -176,14 +183,14 @@ fun ServerAddressView(
                     .size(20.dp)
             )
         }
-        Text(stringResource(id = R.string.activity_landing_server_connect))
+        Text(stringResource(id = R.string.activity_login_server_connect))
     }
 }
 
 @Composable
 fun UserInfoView(
-    landingViewModel: LandingViewModel,
-    landingUiState: LandingUiState,
+    loginViewModel: LoginViewModel,
+    loginUiState: LoginUiState,
     modifier: Modifier
 
 ) {
@@ -199,12 +206,12 @@ fun UserInfoView(
         ) {
             Row(modifier = Modifier.padding(bottom = 4.dp)) {
                 Text(
-                    text = landingUiState.publicSystemInfo?.serverName
+                    text = loginUiState.publicSystemInfo?.serverName
                         ?: stringResource(R.string.error_data),
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
-                    text = landingUiState.publicSystemInfo?.version
+                    text = loginUiState.publicSystemInfo?.version
                         ?: stringResource(R.string.error_data),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier
@@ -216,10 +223,10 @@ fun UserInfoView(
                 style = MaterialTheme.typography.labelMedium,
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.W900)) {
-                        append(stringResource(R.string.activity_landing_login_operating_system))
+                        append(stringResource(R.string.activity_login_login_operating_system))
                     }
                     append(
-                        " " + (landingUiState.publicSystemInfo?.operatingSystem
+                        " " + (loginUiState.publicSystemInfo?.operatingSystem
                             ?: stringResource(R.string.error_data))
                     )
                 }
@@ -228,10 +235,10 @@ fun UserInfoView(
                 style = MaterialTheme.typography.labelMedium,
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.W900)) {
-                        append(stringResource(R.string.activity_landing_login_product_name))
+                        append(stringResource(R.string.activity_login_login_product_name))
                     }
                     append(
-                        " " + (landingUiState.publicSystemInfo?.productName
+                        " " + (loginUiState.publicSystemInfo?.productName
                             ?: stringResource(R.string.error_data))
                     )
                 }
@@ -240,10 +247,10 @@ fun UserInfoView(
                 style = MaterialTheme.typography.labelMedium,
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.W900)) {
-                        append(stringResource(R.string.activity_landing_login_local_address))
+                        append(stringResource(R.string.activity_login_login_local_address))
                     }
                     append(
-                        " " + (landingUiState.publicSystemInfo?.localAddress
+                        " " + (loginUiState.publicSystemInfo?.localAddress
                             ?: stringResource(R.string.error_data))
                     )
                 }
@@ -259,10 +266,11 @@ fun UserInfoView(
                 modifier = Modifier.size(24.dp)
             )
         },
-        value = landingUiState.userName,
-        onValueChange = { landingViewModel.onUserNameChanged(it) },
-        placeholder = { Text(stringResource(id = R.string.activity_landing_login_username)) },
-        label = { Text(stringResource(id = R.string.activity_landing_login_username)) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        value = loginUiState.userName,
+        onValueChange = { loginViewModel.onUserNameChanged(it) },
+        placeholder = { Text(stringResource(id = R.string.activity_login_input_username)) },
+        label = { Text(stringResource(id = R.string.activity_login_input_username)) },
         modifier = Modifier.fillMaxWidth()
     )
     // TextField: Password
@@ -274,10 +282,14 @@ fun UserInfoView(
                 modifier = Modifier.size(24.dp)
             )
         },
-        value = landingUiState.password,
-        onValueChange = { landingViewModel.onPasswordChanged(it) },
-        placeholder = { Text(stringResource(id = R.string.activity_landing_login_password)) },
-        label = { Text(stringResource(id = R.string.activity_landing_login_password)) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {loginViewModel.onSignInClicked(loginUiState.serverAddress, loginUiState.userName, loginUiState.password)}
+        ),
+        value = loginUiState.password,
+        onValueChange = { loginViewModel.onPasswordChanged(it) },
+        placeholder = { Text(stringResource(id = R.string.activity_login_input_password)) },
+        label = { Text(stringResource(id = R.string.activity_login_input_password)) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 4.dp),
@@ -285,11 +297,11 @@ fun UserInfoView(
     )
     // Button: Sign In
     Button(
-        onClick = { landingViewModel.onSignInClicked(landingUiState.serverAddress, landingUiState.userName, landingUiState.password) },
+        onClick = { loginViewModel.onSignInClicked(loginUiState.serverAddress, loginUiState.userName, loginUiState.password) },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !landingUiState.signInLoading
+        enabled = !loginUiState.signInLoading
     ) {
-        if (landingUiState.signInLoading) {
+        if (loginUiState.signInLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -305,15 +317,15 @@ fun UserInfoView(
                     .size(20.dp)
             )
         }
-        Text(stringResource(id = R.string.activity_landing_login_sign_in))
+        Text(stringResource(id = R.string.activity_login_sign_in))
     }
     // Button: Quick Connect
     OutlinedButton(
-        onClick = { landingViewModel.onConnectClicked(landingUiState.serverAddress) },
+        onClick = { loginViewModel.onConnectClicked(loginUiState.serverAddress) },
         modifier = modifier,
-        enabled = !landingUiState.signInLoading
+        enabled = !loginUiState.signInLoading
     ) {
-        if (landingUiState.connectLoading) {
+        if (loginUiState.connectLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -329,14 +341,14 @@ fun UserInfoView(
                     .size(20.dp)
             )
         }
-        Text(stringResource(id = R.string.activity_landing_login_quick_connect))
+        Text(stringResource(id = R.string.activity_login_quick_connect))
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LandingAppPreview() {
-    LandingAppView(
-        landingViewModel = LandingViewModel()
+fun LoginAppPreview() {
+    LoginAppView(
+        loginViewModel = LoginViewModel()
     )
 }

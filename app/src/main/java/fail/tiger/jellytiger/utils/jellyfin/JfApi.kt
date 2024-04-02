@@ -81,6 +81,7 @@ suspend fun loginByUserName(baseUrl: String, username: String, pw: String, then:
             authenticationResult.user!!.primaryImageTag,
             authenticationResult.user!!.policy!!.isAdministrator,
             authenticationResult.user!!.policy!!.isDisabled,
+            true
         )
         withContext(Dispatchers.IO) {
             jellyTiger.dbServer.insert(jellyTiger.globalServer!!)
