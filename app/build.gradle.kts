@@ -90,5 +90,6 @@ dependencies {
     implementation(libs.brv)
     implementation(libs.compose)
     implementation(libs.androidx.constraintlayout.compose)
+
     ksp(libs.ksp)
 }

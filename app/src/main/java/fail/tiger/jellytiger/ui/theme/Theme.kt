@@ -4,12 +4,11 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -84,8 +83,8 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun AppTheme(
-  useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
 ) {
     val context = LocalContext.current
     val colors = when {
@@ -93,23 +92,27 @@ fun AppTheme(
             if (useDarkTheme) dynamicDarkColorScheme(context)
             else dynamicLightColorScheme(context)
         }
+
         useDarkTheme -> DarkColors
         else -> LightColors
     }
+
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colors.surface.toArgb()
-            WindowCompat
+            window.navigationBarColor = colors.surface.toArgb()
+            val controller = WindowCompat
                 .getInsetsController(window, view)
-                .isAppearanceLightStatusBars = useDarkTheme
+            controller.isAppearanceLightStatusBars = !useDarkTheme
+            controller.isAppearanceLightNavigationBars = !useDarkTheme
         }
     }
 
-  MaterialTheme(
-    colorScheme = colors,
-    content = content
-  )
+    MaterialTheme(
+        colorScheme = colors,
+        content = content
+    )
 }

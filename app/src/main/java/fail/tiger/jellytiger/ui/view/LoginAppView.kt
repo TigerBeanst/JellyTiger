@@ -153,7 +153,7 @@ fun ServerAddressView(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
-            onDone = {loginViewModel.onConnectClicked(loginUiState.serverAddress)}
+            onDone = { loginViewModel.onConnectClicked() }
         ),
         value = loginUiState.serverAddress,
         onValueChange = { loginViewModel.onServerAddressChanged(it) },
@@ -163,9 +163,9 @@ fun ServerAddressView(
     )
     // Button: Connect Server
     Button(
-        onClick = { loginViewModel.onConnectClicked(loginUiState.serverAddress) },
+        onClick = { loginViewModel.onConnectClicked() },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !loginUiState.connectLoading
+        enabled = !loginUiState.connectLoading && loginUiState.serverAddress.isNotEmpty()
     ) {
         if (loginUiState.connectLoading) {
             CircularProgressIndicator(
@@ -284,7 +284,7 @@ fun UserInfoView(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
-            onDone = {loginViewModel.onSignInClicked(loginUiState.serverAddress, loginUiState.userName, loginUiState.password)}
+            onDone = { loginViewModel.onSignInClicked() }
         ),
         value = loginUiState.password,
         onValueChange = { loginViewModel.onPasswordChanged(it) },
@@ -297,9 +297,9 @@ fun UserInfoView(
     )
     // Button: Sign In
     Button(
-        onClick = { loginViewModel.onSignInClicked(loginUiState.serverAddress, loginUiState.userName, loginUiState.password) },
+        onClick = { loginViewModel.onSignInClicked() },
         modifier = modifier.padding(top = 16.dp),
-        enabled = !loginUiState.signInLoading
+        enabled = !loginUiState.signInLoading && loginUiState.userName.isNotEmpty() && loginUiState.password.isNotEmpty()
     ) {
         if (loginUiState.signInLoading) {
             CircularProgressIndicator(
@@ -321,7 +321,7 @@ fun UserInfoView(
     }
     // Button: Quick Connect
     OutlinedButton(
-        onClick = { loginViewModel.onConnectClicked(loginUiState.serverAddress) },
+        onClick = { loginViewModel.onConnectClicked() },
         modifier = modifier,
         enabled = !loginUiState.signInLoading
     ) {

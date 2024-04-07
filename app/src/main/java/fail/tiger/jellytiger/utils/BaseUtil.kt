@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment
 import fail.tiger.jellytiger.JellyTigerApplication.Companion.appContext
 import java.io.Serializable
 
-fun Any?.startActivityEnhanced(targetActivity: Class<*>, vararg extras: Pair<String, Any?>) {
+fun Any?.startActivityEnhanced(
+    targetActivity: Class<*>,
+    vararg extras: Pair<String, Any?>,
+    clear: Boolean = false
+) {
     val context = when (this) {
         is ComponentActivity -> this
         is Fragment -> this.context
@@ -17,6 +21,9 @@ fun Any?.startActivityEnhanced(targetActivity: Class<*>, vararg extras: Pair<Str
     val intent = Intent(context, targetActivity)
     if (context == appContext) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    if (clear) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
     extras.forEach { (extraKey, extraValue) ->
         when (extraValue) {

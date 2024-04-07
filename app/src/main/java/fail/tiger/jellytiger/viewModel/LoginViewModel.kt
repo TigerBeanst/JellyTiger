@@ -30,10 +30,10 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(password = nowPassword) }
     }
 
-    fun onConnectClicked(serverAddress: String) {
+    fun onConnectClicked() {
         _uiState.update { it.copy(connectLoading = true) }
         viewModelScope.launch {
-            getPublicSystemInfo(serverAddress, then = { publicSystemInfo ->
+            getPublicSystemInfo(uiState.value.serverAddress, then = { publicSystemInfo ->
                 _uiState.update {
                     it.copy(serverCheckState = true, publicSystemInfo = publicSystemInfo)
                 }
@@ -42,10 +42,14 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun onSignInClicked(serverAddress: String,userName: String,passWord: String) {
+    fun onSignInClicked() {
         _uiState.update { it.copy(signInLoading = true) }
         viewModelScope.launch {
-            loginByUserName(serverAddress, userName, passWord) {
+            loginByUserName(
+                uiState.value.serverAddress,
+                uiState.value.userName,
+                uiState.value.password
+            ) {
                 startActivityEnhanced(MainActivity::class.java, Pair("JustLetMeIn", true))
             }
             _uiState.update { it.copy(signInLoading = false) }
